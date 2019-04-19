@@ -43,6 +43,8 @@ CREATE TABLE Enrollment (
   FOREIGN KEY (CourseID) REFERENCES Course (ID)
 );
 
+-- Please add data in enrollment.
+
 INSERT INTO Course VALUES
 (1, 101, 'Water Bending', 'Bending the water in plants'),
 (2, 201, 'Earth Bending', 'Using Rocks for Basic Shelter'),
