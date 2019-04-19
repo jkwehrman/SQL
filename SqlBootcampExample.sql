@@ -8,7 +8,8 @@ CREATE TABLE Customer (
 	City varchar(50) not null,
 	State varchar(2) not null,
 	Sales decimal(18,0) not null,
-	Active bit not null
+	Active bit not null, 
+    Foreign key(state) references state(code)
 );
 
 Insert Customer (Name, City, State, Sales, Active) Values ('Acme, inc.','Jersey City','NJ',14381891,1);
