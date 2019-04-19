@@ -38,12 +38,21 @@ CREATE TABLE Enrollment (
   ID			INT				PRIMARY KEY  AUTO_INCREMENT,
   StudentID		INT				NOT NULL,
   CourseID		INT				NOT NULL,
-  Grade			decimal(5,2),
+  Grade			varchar(10),
   FOREIGN KEY (studentID) REFERENCES Student (ID),
   FOREIGN KEY (CourseID) REFERENCES Course (ID)
 );
 
--- Please add data in enrollment.
+-- Please add data in enrollment.  THERE IS AN ERROR HERE.
+INSERT INTO Enrollment VALUES
+(1, 1, 2, A+),
+(2,1,3,C),
+(3,2,4,B+),
+(4, 3,1,B-),
+(6, 4,1,A-),
+(7, 4,2,A),
+(8,4,3 ,withdrew);
+
 
 INSERT INTO Course VALUES
 (1, 101, 'Water Bending', 'Bending the water in plants'),
