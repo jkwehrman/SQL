@@ -31,6 +31,12 @@ CREATE TABLE Course (
 );
 
 
+INSERT INTO Course VALUES
+(1, 101, 'Water Bending', 'Bending the water in plants'),
+(2, 201, 'Earth Bending', 'Using Rocks for Basic Shelter'),
+(3, 301, 'Air Bending', 'Fun with Air Scooters'),
+(4, 401, 'Fire Bending', 'Redirecting Electricity')
+;
 
 
 
@@ -45,21 +51,15 @@ CREATE TABLE Enrollment (
 
 -- Please add data in enrollment.  THERE IS AN ERROR HERE.
 INSERT INTO Enrollment VALUES
-(1, 1, 2, A+),
-(2,1,3,C),
-(3,2,4,B+),
-(4, 3,1,B-),
-(6, 4,1,A-),
-(7, 4,2,A),
-(8,4,3 ,withdrew);
+(1, 1, 2, 'A+'),
+(2, 1, 3,'C'),
+(3, 2, 4,'B+'),
+(4, 3, 1,'B-'),
+(6, 4, 1,'A-'),
+(7, 4, 2,'A'),
+(8, 4, 3 ,'withdrew');
 
 
-INSERT INTO Course VALUES
-(1, 101, 'Water Bending', 'Bending the water in plants'),
-(2, 201, 'Earth Bending', 'Using Rocks for Basic Shelter'),
-(3, 301, 'Air Bending', 'Fun with Air Scooters'),
-(4, 401, 'Fire Bending', 'Redirecting Electricity')
-;
 
 CREATE TABLE Instructor (
 	ID				INT            PRIMARY KEY  AUTO_INCREMENT,
@@ -76,3 +76,14 @@ INSERT INTO Instructor VALUES
 
 
 select * from enrollment;
+-- Stolen from other 
+
+-- select actor.firstname, actor.lastname, movie.title, 
+-- credit.roll
+-- from movie
+-- join moviegenre on movie.id = moviegenre.movieID
+-- join genre on moviegenre.genreID = genre.ID
+-- join credit on movie.id = credit.movieID
+-- join actor on credit.actorID = actor.ID
+-- where genre.name = 'musical'
+-- and movie.year >= 1960;

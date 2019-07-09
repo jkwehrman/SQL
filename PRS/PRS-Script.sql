@@ -12,10 +12,11 @@ PhoneNumber		varchar(12) 	NOT NULL,
 Email			varchar(75) 	NOT NULL,
 IsReviewer		TinyInt(1) 		NOT NULL,
 IsAdmin			TinyInt(1) 		NOT NULL,
-IsActive		TinyInt(1)		NOT NULL,
-DateCreated		DATETIME		NOT NULL,
-DateUpdated		DATETIME		NOT NULL,
-UpdatedByUser	INT				NOT NULL 			
+IsActive 				tinyint(1) 		default 1 not null,
+DateCreated 			datetime 		default current_timestamp not null,
+DateUpdated 			datetime 		default current_timestamp on update current_timestamp not null,
+UpdatedByUser 			integer 		default 1 not null,
+CONSTRAINT 		uname 			UNIQUE (UserName)
 );
 
 INSERT INTO User 
@@ -41,10 +42,11 @@ Zip				varchar(5) 		NOT NULL,
 PhoneNumber		varchar(12) 	NOT NULL,
 Email			varchar(100) 	NOT NULL,
 IsPreApproved	TinyInt(1) 		NOT NULL,
-IsActive		TinyInt(1) 		NOT NULL,
-DateCreated		DATETIME 		NOT NULL,
-DateUpdated		DATETIME 		NOT NULL,
-UpdatedByUser	INT 			NOT NULL
+IsActive 				tinyint(1) 		default 1 not null,
+DateCreated 			datetime 		default current_timestamp not null,
+DateUpdated 			datetime 		default current_timestamp on update current_timestamp not null,
+UpdatedByUser 			integer 		default 1 not null,
+CONSTRAINT 		vcode 			UNIQUE (Code)
 );
 
 -- insert vendors
@@ -65,11 +67,12 @@ Name			varchar(150) 	NOT NULL,
 Price			decimal(10,2) 	NOT NULL,
 Unit			varchar(255), 
 PhotoPath		varchar(255), 
-IsActive		TinyInt(1) 		NOT NULL,
-DateCreated		DATETIME 		NOT NULL,
-DateUpdated		DATETIME 		NOT NULL,
-UpdatedByUser	INT 			NOT NULL,
-FOREIGN KEY (VendorID) REFERENCES Vendor(ID)
+IsActive 				tinyint(1) 		default 1 not null,
+DateCreated 			datetime 		default current_timestamp not null,
+DateUpdated 			datetime 		default current_timestamp on update current_timestamp not null,
+UpdatedByUser 			integer 		default 1 not null,
+FOREIGN KEY (VendorID) REFERENCES Vendor(ID),
+CONSTRAINT 		vendor_part 	UNIQUE (VendorID,PartNumber)
 );
 INSERT INTO Product VALUES
 (1,1,'ME280LL','iPad Mini 2',296.99,NULL,NULL, 1, current_timestamp(), current_timestamp(),1),
@@ -97,10 +100,11 @@ Status			varchar(50) 	NOT NULL,
 Total			decimal(10,2) 	NOT NULL,
 SubmittedDAte	DATE 			NOT NULL,
 ReasonForRejection varchar(100),
-IsActive		TinyInt(1) 		NOT NULL,
-DateCreated		DATETIME 		NOT NULL,
-DateUpdated		DATETIME 		NOT NULL,
-UpdatedByUser	INT 			NOT NULL,
+IsActive 				tinyint(1) 		default 1 not null,
+DateCreated 			datetime 		default current_timestamp not null,
+DateUpdated 			datetime 		default current_timestamp on update current_timestamp not null,
+UpdatedByUser 			integer 		default 1 not null,
+
 FOREIGN KEY (UserID) REFERENCES User(ID)
 );
 
@@ -120,7 +124,8 @@ DateCreated 			datetime 		default current_timestamp not null,
 DateUpdated 			datetime 		default current_timestamp on update current_timestamp not null,
 UpdatedByUser 			integer 		default 1 not null,
 FOREIGN KEY (ProductID) REFERENCES Product(ID),
-FOREIGN KEY (PurchaseRequestID) REFERENCES PurchaseRequest(ID)
+FOREIGN KEY (PurchaseRequestID) REFERENCES PurchaseRequest(ID),
+CONSTRAINT 				req_pdt 			UNIQUE (PurchaseRequestID, ProductID)
 );
 
 INSERT INTO Purchaserequestlineitem VALUES
@@ -128,66 +133,12 @@ INSERT INTO Purchaserequestlineitem VALUES
 (2, 3, 4, 1, 1, current_timestamp(), current_timestamp(), 1),
 (3, 2, 7, 2, 1, current_timestamp(), current_timestamp(), 1);
 
+--  create user
+CREATE USER prs_user@localhost IDENTIFIED BY 'sesame';
 
-    
--- To join tables to see who ordered, what they ordered and the status of the order.
-SELECT *
-FROM User
-JOIN Purchaserequest
-    on User.id = Purchaserequest.UserID;
-  
--- To join tables to see who ordered, what they ordered and the status of the order, and only that.
-SELECT FirstName, LastName, description, status
-FROM User
-JOIN Purchaserequest
-    on User.id = Purchaserequest.UserID;
+GRANT SELECT, INSERT, DELETE, UPDATE ON prs.*TO prs_user@localhost;
+      
 
- -- To also put the names together in one cell
-SELECT description, status,
-	Concat(FirstName, " ", LastName)      
-FROM User
-JOIN Purchaserequest
-    on User.id = Purchaserequest.UserID;
-    
--- And to sort in descending order by status
-SELECT description, status,
-	Concat(FirstName, " ", LastName)      
-FROM User
-JOIN Purchaserequest
-    on User.id = Purchaserequest.UserID 
-Order by status desc;
 
--- by keyword
-SELECT description, status,
-	Concat(FirstName, " ", LastName)      
-FROM User
-JOIN Purchaserequest
-    on User.id = Purchaserequest.UserID 
-	where description like 'computer%';
 
- -- To join items for sale, vendor of items and how many are requested
-SELECT *
-FROM Product
-JOIN Vendor
-    on Product.VendorID = Vendor.ID
-JOIN Purchaserequestlineitem
-    on Product.ID = Purchaserequestlineitem.ProductID
-JOIN PurchaseRequest
-    on PurchaseRequest.ID = PurchaseRequestLineItem.PurchaseRequestID
-JOIN User
-    on User.ID = PurchaseRequest.UserID;
-    
--- Join all tables, select certain attributes
-SELECT Purchaserequest.DateCreated, Concat(FirstName, " ", LastName) as User, Description, Product.Name, Price, Quantity, Vendor.Name, status
-FROM Product
-JOIN Vendor
-    on Product.VendorID = Vendor.ID
-JOIN Purchaserequestlineitem
-    on Product.ID = Purchaserequestlineitem.ProductID
-JOIN PurchaseRequest
-    on PurchaseRequest.ID = PurchaseRequestLineItem.PurchaseRequestID
-JOIN User
-    on User.ID = PurchaseRequest.UserID;
-    
-    
     
